@@ -239,9 +239,10 @@ function legacyStep_(t0, budget) {
   var job = JSON.parse(p.getProperty('LEGACY_JOB') || 'null');
   if (!job) {
     for (var i = 1; i < v.length; i++) {
-      if (v[i][ix.LegacyVideo] && !v[i][ix.FileId] && !/^legacy-fail/.test(v[i][ix.Notes])) {
-        var src = 'https://stream.mux.com/' + v[i][ix.LegacyVideo] + '/medium.mp4';
-        var size = head_(src); if (!size) { sh.getRange(i + 1, ix.Notes + 1).setValue('legacy-fail: size'); continue; }
+      if (v[i][ix.LegacyVideo] && !v[i][ix.FileId] && !/^legacy-fail: (?!size)/.test(v[i][ix.Notes])) {
+        var src = '', size = 0, qs = ['medium', 'high', 'low'];
+        for (var q = 0; q < qs.length && !size; q++) { src = 'https://stream.mux.com/' + v[i][ix.LegacyVideo] + '/' + qs[q] + '.mp4'; size = head_(src); }
+        if (!size) { sh.getRange(i + 1, ix.Notes + 1).setValue('legacy-fail: size'); continue; }
         var name = 'senja-' + (v[i][ix.FileName] || (v[i][ix.Name] + '.mp4'));
         var res = UrlFetchApp.fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable&fields=id', {
           method: 'post', contentType: 'application/json; charset=UTF-8', muteHttpExceptions: true,
