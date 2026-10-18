@@ -164,3 +164,13 @@ function KTV_BOOT(SRC){
 })();
 </script>
 </section>
+
+<script>
+(function(){ /* ಕಥೆಗಳ ವಿಭಾಗವನ್ನು TV ಯ "ನಿಮ್ಮ ಕಥೆಯೂ ಈ ವೇದಿಕೆಗೆ ಬರಲಿ" ವಿಭಾಗದ ಮೇಲೆ ಇಡುವುದು */
+  function place(){ var s=document.getElementById("stories"); if(!s) return;
+    var hs=[].slice.call(document.querySelectorAll("h2,h3")).filter(function(h){return /ನಿಮ್ಮ ಕಥೆಯೂ/.test(h.textContent) && !s.contains(h)});
+    if(!hs.length) return; var t=hs[0]; while(t.parentElement && t.parentElement.children.length===1 && t.parentElement!==document.body) t=t.parentElement;
+    var sec=t.closest("section")||t.parentElement; if(sec && sec.parentNode) sec.parentNode.insertBefore(s, sec); }
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",place); else place();
+})();
+</script>
