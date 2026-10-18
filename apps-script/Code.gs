@@ -124,7 +124,7 @@ function submit_(b) {
     var row = {
       Timestamp: new Date(), Form: b.form, Award: FORMS[b.form], Kind: kind, Status: 'Pending',
       Rating: Number(b.rating) || '', Name: clean_(b.name, 80), Place: clean_(b.place, 80),
-      Phone: clean_(b.phone, 20), Email: clean_(b.email, 120), Text: clean_(b.text, 2000),
+      Phone: b.phone ? "'" + clean_(b.phone, 20) : '', Email: clean_(b.email, 120), Text: clean_(b.text, 2000),
       FileName: clean_(b.fileName, 200), FileId: fileId, DriveLink: link,
       Duration: Number(b.duration) || '', SizeMB: b.size ? Math.round(Number(b.size) / 1e5) / 10 : '',
       YouTubeId: '', Source: 'form', LegacyVideo: '', Shared: '', Notes: ''
