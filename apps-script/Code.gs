@@ -7,7 +7,7 @@
  * - YouTube ಬ್ಯಾಕಪ್: ಪ್ರತಿ 10 ನಿಮಿಷಕ್ಕೆ ಒಂದು ಹಂತ (ಸಮಯ ಮಿತಿಯೊಳಗೆ)
  */
 
-var ALLOWED_ORIGINS = ['https://stories.kalpatharu.org', 'https://kalpatharu.org', 'https://www.kalpatharu.org'];
+var ALLOWED_ORIGINS = ['https://stories.kalpatharu.org', 'https://kalpatharu.org', 'https://www.kalpatharu.org', 'https://gmarathe.github.io'];
 var FORMS = { finisher: 'Finisher', hof: 'Hall of Fame', superhealer: 'Super Healer', torchbearer: 'Torchbearer' };
 var COLS = ['Timestamp', 'Form', 'Award', 'Kind', 'Status', 'Rating', 'Name', 'Place', 'Phone', 'Email', 'Text',
             'FileName', 'FileId', 'DriveLink', 'Duration', 'SizeMB', 'YouTubeId', 'Source', 'LegacyVideo', 'Shared', 'Notes'];
@@ -99,7 +99,7 @@ function start_(b) {
   var fileName = b.form + '-' + stamp + '-' + who + '-' + Utilities.getUuid().slice(0, 6) + '.' + ext;
   var res = UrlFetchApp.fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=resumable&fields=id', {
     method: 'post', contentType: 'application/json; charset=UTF-8', muteHttpExceptions: true,
-    headers: { Authorization: 'Bearer ' + ScriptApp.getOAuthToken(), 'X-Upload-Content-Type': mime, 'X-Upload-Content-Length': String(size), Origin: ALLOWED_ORIGINS[0] },
+    headers: { Authorization: 'Bearer ' + ScriptApp.getOAuthToken(), 'X-Upload-Content-Type': mime, 'X-Upload-Content-Length': String(size), Origin: (ALLOWED_ORIGINS.indexOf(b.origin) >= 0 ? b.origin : ALLOWED_ORIGINS[0]) },
     payload: JSON.stringify({ name: fileName, parents: [getFolder_(b.form).getId()], mimeType: mime })
   });
   var loc = res.getHeaders()['Location'] || res.getHeaders()['location'];

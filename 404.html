@@ -301,7 +301,7 @@ input:focus,textarea:focus{outline:2px solid var(--p);border-color:var(--p)}
   var CHUNK = 8 * 1024 * 1024; /* 256 KB ಗುಣಕ */
   function upload(){
     var size = state.blob.size;
-    var start = state.uploadUrl ? Promise.resolve() : api({ action:"start", form:slug, name:$("f-name").value.trim(), mime:state.mime, ext:state.ext, size:size })
+    var start = state.uploadUrl ? Promise.resolve() : api({ action:"start", origin:location.origin, form:slug, name:$("f-name").value.trim(), mime:state.mime, ext:state.ext, size:size })
       .then(function(j){ state.uploadUrl = j.uploadUrl; state.fileName = j.fileName; state.sent = 0; });
     start.then(function next(){
       if (state.fileId || state.sent >= size) return finish();
