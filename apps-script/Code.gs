@@ -8,7 +8,7 @@
  */
 
 var ALLOWED_ORIGINS = ['https://stories.kalpatharu.org', 'https://kalpatharu.org', 'https://www.kalpatharu.org', 'https://gmarathe.github.io'];
-var FORMS = { finisher: 'Finisher', hof: 'Hall of Fame', superhealer: 'Super Healer', torchbearer: 'Torchbearer' };
+var FORMS = { finisher: 'Finisher', hof: 'Hall of Fame', superhealer: 'Super Healer', torchbearer: 'Torchbearer', diamond: 'Diamond' };
 var COLS = ['Timestamp', 'Form', 'Award', 'Kind', 'Status', 'Rating', 'Name', 'Place', 'Phone', 'Email', 'Text',
             'FileName', 'FileId', 'DriveLink', 'Duration', 'SizeMB', 'YouTubeId', 'Source', 'LegacyVideo', 'Shared', 'Notes'];
 var CHUNK = 32 * 1024 * 1024; // 256 KB ಗುಣಕ, 50 MB UrlFetch ಮಿತಿಯೊಳಗೆ

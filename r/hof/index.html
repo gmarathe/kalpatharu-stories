@@ -46,6 +46,7 @@ label{display:block;font-weight:600;font-size:14px;margin:14px 0 6px}
 input[type=text],input[type=tel],input[type=email],textarea{width:100%;border:1.5px solid #d9d4ee;border-radius:12px;padding:12px 14px;font:16px inherit;font-family:inherit;color:var(--ink);background:#fff}
 textarea{min-height:110px;resize:vertical}
 input:focus,textarea:focus{outline:2px solid var(--p);border-color:var(--p)}
+.opts{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 4px}.opts label{display:flex;gap:6px;align-items:center;font-weight:400;font-size:14px;background:#faf8ff;border:1px solid var(--line);border-radius:999px;padding:6px 12px;margin:0;cursor:pointer}
 .check{display:flex;gap:10px;align-items:flex-start;font-weight:400;font-size:14px;line-height:1.6;margin-top:16px}
 .check input{width:20px;height:20px;margin-top:3px;flex-shrink:0}
 .bar{height:12px;background:#eee8fb;border-radius:999px;overflow:hidden;margin:18px 0 8px}
@@ -135,9 +136,10 @@ input:focus,textarea:focus{outline:2px solid var(--p);border-color:var(--p)}
     <input type="tel" id="f-phone" inputmode="tel" autocomplete="tel" placeholder="10 ಅಂಕಿಗಳು">
     <label for="f-email">ಇಮೇಲ್ (ಐಚ್ಛಿಕ)</label>
     <input type="email" id="f-email" autocomplete="email">
-    <label for="f-line">ಒಂದು ಸಾಲಿನಲ್ಲಿ ನಿಮ್ಮ ಬದಲಾವಣೆ (ಐಚ್ಛಿಕ)</label>
-    <input type="text" id="f-line" maxlength="200" placeholder="ಉದಾ: ರೇಖಿಯಿಂದ ನನ್ನ ಆತ್ಮವಿಶ್ವಾಸ ಹೆಚ್ಚಾಯಿತು">
-    <label class="check"><input type="checkbox" id="f-consent"> ನನ್ನ ವಿಡಿಯೋ ಮತ್ತು ಕಥೆಯನ್ನು ನನ್ನ ಹೆಸರು ಮತ್ತು ಊರಿನೊಂದಿಗೆ ಕಲ್ಪತರು ವೆಬ್‌ಸೈಟ್, ಕಲ್ಪತರು TV ಮತ್ತು ಕಲ್ಪತರು ಸಾಮಾಜಿಕ ಮಾಧ್ಯಮಗಳಲ್ಲಿ ಹಂಚಿಕೊಳ್ಳಲು ಒಪ್ಪಿಗೆ ಇದೆ.</label>
+    <div id="line-box"><label for="f-line">ಒಂದು ಸಾಲಿನಲ್ಲಿ ನಿಮ್ಮ ಬದಲಾವಣೆ (ಐಚ್ಛಿಕ)</label>
+    <input type="text" id="f-line" maxlength="200" placeholder="ಉದಾ: ರೇಖಿಯಿಂದ ನನ್ನ ಆತ್ಮವಿಶ್ವಾಸ ಹೆಚ್ಚಾಯಿತು"></div>
+    <div id="x-fields"></div>
+    <label class="check"><input type="checkbox" id="f-consent"> <span id="consent-text">ನನ್ನ ವಿಡಿಯೋ ಮತ್ತು ಕಥೆಯನ್ನು ನನ್ನ ಹೆಸರು ಮತ್ತು ಊರಿನೊಂದಿಗೆ ಕಲ್ಪತರು ವೆಬ್‌ಸೈಟ್, ಕಲ್ಪತರು TV ಮತ್ತು ಕಲ್ಪತರು ಸಾಮಾಜಿಕ ಮಾಧ್ಯಮಗಳಲ್ಲಿ ಹಂಚಿಕೊಳ್ಳಲು ಒಪ್ಪಿಗೆ ಇದೆ.</span></label>
     <div class="err hide" id="a-err"></div>
     <button class="btn" id="send">ಕಥೆ ಕಳುಹಿಸಿ 🚀</button>
   </section>
@@ -164,8 +166,8 @@ input:focus,textarea:focus{outline:2px solid var(--p);border-color:var(--p)}
   <div class="foot">ಕಲ್ಪತರು · YOUR PATH TO SUCCESS</div>
 </div>
 
-<script src="../../config.js?v=3"></script>
-<script src="../../forms.js?v=3"></script>
+<script src="../../config.js?v=4"></script>
+<script src="../../forms.js?v=4"></script>
 <script>
 (function(){
   var slug = (location.pathname.match(/\/r\/([^\/?#]+)/) || [])[1] || new URLSearchParams(location.search).get("f") || "";
@@ -276,6 +278,26 @@ input:focus,textarea:focus{outline:2px solid var(--p);border-color:var(--p)}
     tick = setInterval(function(){ var s=(Date.now()-t0)/1000; $("timer").textContent = fmt(s)+" / "+fmt(F.maxMinutes*60); if (s >= F.maxMinutes*60) rec.stop(); }, 500);
   };
 
+  /* ಹೆಚ್ಚುವರಿ ಪ್ರಶ್ನೆಗಳು (ಫಾರ್ಮ್‌ಗೆ ಅನುಗುಣವಾಗಿ) */
+  var X = F.fields || [];
+  if (X.length) {
+    $("line-box").classList.add("hide");
+    $("x-fields").innerHTML = X.map(function(q,i){
+      var lab = '<label for="x-'+i+'">'+esc(q.label)+(q.required?' *':' (ಐಚ್ಛಿಕ)')+'</label>';
+      if (q.type === "checks") return '<label>'+esc(q.label)+(q.required?' *':' (ಐಚ್ಛಿಕ)')+'</label><div class="opts" id="x-'+i+'">'+q.options.map(function(o){ return '<label><input type="checkbox" value="'+esc(o)+'"> '+esc(o)+'</label>'; }).join("")+'</div>';
+      return lab+'<input type="text" id="x-'+i+'" maxlength="'+(q.max||200)+'" placeholder="'+esc(q.placeholder||"")+'">';
+    }).join("");
+  }
+  if (F.consent) $("consent-text").textContent = F.consent;
+  function xValue(q,i){
+    if (q.type === "checks") return [].map.call($("x-"+i).querySelectorAll("input:checked"), function(c){ return c.value; }).join(", ");
+    return $("x-"+i).value.trim();
+  }
+  function storyText(){
+    if (!X.length) return $("f-line").value.trim();
+    return X.map(function(q,i){ var v = xValue(q,i); return v ? (q.key || q.label)+": "+v : ""; }).filter(Boolean).join("\n");
+  }
+
   /* ನಿಮ್ಮ ಬಗ್ಗೆ + ಕಳುಹಿಸಿ */
   function aErr(m){ $("a-err").textContent=m; $("a-err").classList.remove("hide"); }
   $("send").onclick = function(){
@@ -284,6 +306,7 @@ input:focus,textarea:focus{outline:2px solid var(--p);border-color:var(--p)}
     if (!name) return aErr("ದಯವಿಟ್ಟು ನಿಮ್ಮ ಹೆಸರು ಬರೆಯಿರಿ");
     if (!place) return aErr("ದಯವಿಟ್ಟು ನಿಮ್ಮ ಊರು ಬರೆಯಿರಿ");
     if (phone.replace(/\D/g,"").length < 10) return aErr("ದಯವಿಟ್ಟು ಸರಿಯಾದ WhatsApp ಸಂಖ್ಯೆ ಬರೆಯಿರಿ");
+    for (var qi=0; qi<X.length; qi++) { if (X[qi].required && !xValue(X[qi],qi)) return aErr("ದಯವಿಟ್ಟು ಉತ್ತರಿಸಿ: "+X[qi].label); }
     if (!$("f-consent").checked) return aErr("ಮುಂದುವರಿಯಲು ಒಪ್ಪಿಗೆ ಚೆಕ್‌ಬಾಕ್ಸ್ ಆಯ್ಕೆ ಮಾಡಿ");
     if (!state.blob) { show("guide"); return; }
     show("upload"); upload();
@@ -328,7 +351,7 @@ input:focus,textarea:focus{outline:2px solid var(--p);border-color:var(--p)}
     setPct(99);
     return api({ action:"submit", form:slug, award:F.award, kind:"video", rating:state.rating,
       name:$("f-name").value.trim(), place:$("f-place").value.trim(), phone:$("f-phone").value.trim(), email:$("f-email").value.trim(),
-      text:$("f-line").value.trim(), consent:true, fileName:state.fileName, fileId:state.fileId, mime:state.mime, size:state.blob.size, duration:Math.round(state.dur||0) })
+      text:storyText(), consent:true, fileName:state.fileName, fileId:state.fileId, mime:state.mime, size:state.blob.size, duration:Math.round(state.dur||0) })
     .then(function(){
       setPct(100);
       $("t-title").textContent = F.thanksTitle; $("t-text").textContent = F.thanksText;
